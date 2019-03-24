@@ -18,7 +18,7 @@
         <filter_condition/>
         <is_rest>false</is_rest>
         <message/>
-        <name>NeedIt Whew Needed Field Date</name>
+        <name>NeedIt When Needed Field Date</name>
         <order>100</order>
         <priority>100</priority>
         <rest_method/>
@@ -29,12 +29,10 @@
         <role_conditions/>
         <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
 
-	// Add your code here	
-	var rightNow = new GlideDateTime();	
-	var whenNeeded = new GlideDateTime(current.u_when_needed);
-	
-	if (whenNeeded.before(rightNow)) {
-		gs.addErrorMessage("When needed date cannot be in the past.  Your request has not been saved to the database.");
+	var niutils = new NeedItUtils();
+	var isPast = niutils.isDatePast(current.u_when_needed);
+	if(isPast == true) {
+		gs.addErrorMessage("You can not submit NeedIt requests for a past date.")
 		current.setAbortAction(true);
 	}
 	
@@ -54,15 +52,15 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>a197dd83db107300346ddde748961912</sys_id>
-        <sys_mod_count>1</sys_mod_count>
-        <sys_name>NeedIt Whew Needed Field Date</sys_name>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>NeedIt When Needed Field Date</sys_name>
         <sys_overrides/>
         <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
         <sys_policy/>
         <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
         <sys_update_name>sys_script_a197dd83db107300346ddde748961912</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2019-03-24 15:27:58</sys_updated_on>
+        <sys_updated_on>2019-03-24 22:55:18</sys_updated_on>
         <template/>
         <when>before</when>
     </sys_script>
