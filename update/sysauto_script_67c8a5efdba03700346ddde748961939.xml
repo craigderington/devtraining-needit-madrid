@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sysauto_script">
+    <sysauto_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition/>
+        <conditional>false</conditional>
+        <name>Generate Random NeedIt Records</name>
+        <run_as display_value="System Administrator">6816f79cc0a8016401c5a33be04be441</run_as>
+        <run_as_tz/>
+        <run_dayofmonth>1</run_dayofmonth>
+        <run_dayofweek>1</run_dayofweek>
+        <run_period/>
+        <run_start>2019-04-07 15:55:20</run_start>
+        <run_time>1970-01-01 08:00:00</run_time>
+        <run_type>on_demand</run_type>
+        <script><![CDATA[// create needit records
+var recordsToMake = 1000;
+
+// declare and init the vars
+var genNIRec;
+var i;
+var tableName = "x_58872_needit_needit";
+var requestTypeArray = ["facilities", "hr", "legal"];
+var selectRequestType = "";
+var selectWhatNeeded = 3;
+var pickDate = 1;
+var requestedForArray = [{"name":"Fred Luddy","email":"fred.luddy@example.com"},{"name":"Beth Anglin","email":"beth.anglin@example.com"},{"name":"Joe Employee","email":"joe.employee@example.com"}];
+var pickUser;
+
+// for loop to create the necessary records
+for (i = 0; i < recordsToMake; i++) {
+	
+	// create an empty record for the NeedIt table
+	try {
+		genNIRec = new GlideRecord(tableName);
+		genNIRec.newRecord();
+
+		// select a random value from the request type array
+		selectRequestType = requestTypeArray[(Math.floor(Math.random() * 3))];
+		genNIRec.setValue("u_request_type", selectRequestType);
+
+		// set the what needed field value choice from the request type, either 1 or 2
+		selectWhatNeeded = (Math.floor(Math.random() * 3));
+		genNIRec.setValue("u_what_needed", selectWhatNeeded);
+
+		// set the short description
+		genNIRec.setValue("short_description", "Automatically created NeedIt Request: " + selectRequestType + ", " + selectWhatNeeded);
+
+		// set the when needed field value (dat/time) to a date between yesterday and seven months ago
+		var rightNow = new GlideDateTime();
+		pickDate = (Math.floor(Math.random() * 210) + 1);
+		rightNow.addDaysUTC(-pickDate);
+		genNIRec.setValue("u_when_needed", rightNow.getDate());
+
+		// get a random user for our record
+		pickUser = (Math.floor(Math.random() * 3));
+		genNIRec.u_requested_for.setDisplayValue(requestedForArray[pickUser].name);
+		genNIRec.setValue("u_requested_for_email", requestedForArray[pickUser].email);
+
+		// set the value for priority and state to Requested
+		genNIRec.setValue("priority", (Math.floor(Math.random() * 5) + 1));
+		genNIRec.setValue("state", 13);
+
+		// insert the new record
+		genNIRec.insert();
+		gs.info("Scheduled Script Excecution Created NeedIt Request: " + selectRequestType + ", "+ selectWhatNeeded + " for " + requestedForArray[pickUser].name);
+	}
+	// catch exceptions
+	catch (ex) {
+		msg = ex.getMessage();
+		gs.error("Scheduled Script Execution failed: " + msg);
+	}
+}]]></script>
+        <sys_class_name>sysauto_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-04-07 16:10:59</sys_created_on>
+        <sys_id>67c8a5efdba03700346ddde748961939</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>Generate Random NeedIt Records</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sysauto_script_67c8a5efdba03700346ddde748961939</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-04-07 16:23:18</sys_updated_on>
+        <upgrade_safe>false</upgrade_safe>
+    </sysauto_script>
+</record_update>
